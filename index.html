@@ -382,6 +382,84 @@
     .flashcard-add:hover { background: rgba(143,182,216,0.15); }
     .flashcard-add i { font-size: 1.5rem; color: var(--calm); }
 
+    /* Inline card editor */
+    .flashcard-editor {
+      width: 340px;
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 0 0 2.5px var(--calm), 0 6px 24px rgba(36,58,94,0.13);
+      overflow: hidden;
+      animation: editorPop 0.18s ease;
+    }
+    @keyframes editorPop {
+      from { opacity: 0; transform: translateY(8px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .flashcard-editor-top {
+      background: var(--calm);
+      height: 8px;
+    }
+    .flashcard-editor-body {
+      padding: 14px 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .flashcard-editor-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--denim);
+      margin-bottom: 2px;
+    }
+    .flashcard-editor textarea {
+      width: 100%;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--midnight);
+      background: var(--cloud);
+      border: 1.5px solid var(--powder);
+      border-radius: 7px;
+      padding: 8px 10px;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.45;
+    }
+    .flashcard-editor textarea:focus { border-color: var(--calm); background: #fff; }
+    .flashcard-editor-divider {
+      height: 1px;
+      background: var(--powder);
+      margin: 2px 0;
+    }
+    .flashcard-editor-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px 12px;
+    }
+    .editor-hint {
+      font-size: 0.72rem;
+      color: #aaa;
+      font-weight: 600;
+    }
+    .editor-actions { display: flex; gap: 7px; }
+    .editor-btn {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.82rem;
+      padding: 6px 14px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .editor-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .editor-btn-cancel { background: var(--powder); color: var(--denim); }
+    .editor-btn-save   { background: var(--midnight); color: var(--white); }
+
     /* ── MODALS ── */
     .modal-overlay {
       display: none;
@@ -597,6 +675,7 @@
     // ── Views ──
     function showTopicsView() {
       currentTopicId = null;
+      editorOpen = false;
       document.getElementById('topics-view').style.display = 'block';
       document.getElementById('cards-view').style.display = 'none';
       document.getElementById('app-bar-title').innerHTML = 'My Collections';
@@ -609,6 +688,7 @@
 
     function showCardsView(topicId) {
       currentTopicId = topicId;
+      editorOpen = typeof editorOpen !== 'undefined' ? editorOpen : false;
       const topic = data.find(t => t.id === topicId);
       document.getElementById('topics-view').style.display = 'none';
       document.getElementById('cards-view').style.display = 'block';
@@ -620,7 +700,7 @@
         <button class="app-btn app-btn-danger" onclick="deleteAllCards('${topicId}')">
           <i class="fas fa-trash"></i> Delete All Cards
         </button>
-        <button class="app-btn app-btn-primary" onclick="openCardModal()">
+        <button class="app-btn app-btn-primary" onclick="editorOpen=true;renderCards('${topicId}',true)">
           <i class="fas fa-plus"></i> Add Card
         </button>`;
       renderCards(topicId);
@@ -680,7 +760,9 @@
     }
 
     // ── Cards ──
-    function renderCards(topicId) {
+    let editorOpen = false;
+
+    function renderCards(topicId, focusEditor) {
       const topic = data.find(t => t.id === topicId);
       const grid = document.getElementById('cards-grid');
       grid.innerHTML = '';
@@ -716,43 +798,106 @@
           e.stopPropagation();
           topic.cards.splice(index, 1);
           saveData();
-          renderCards(topicId);
-          // update count in breadcrumb actions
           showCardsView(topicId);
         });
 
         grid.appendChild(el);
       });
 
-      // Add card tile
-      const addTile = document.createElement('div');
-      addTile.className = 'flashcard-add';
-      addTile.innerHTML = `<i class="fas fa-plus"></i><span>New Card</span>`;
-      addTile.onclick = openCardModal;
-      grid.appendChild(addTile);
+      // Inline editor or add tile
+      if (editorOpen) {
+        appendInlineEditor(topicId, focusEditor !== false);
+      } else {
+        const addTile = document.createElement('div');
+        addTile.className = 'flashcard-add';
+        addTile.innerHTML = `<i class="fas fa-plus"></i><span>New Card</span>`;
+        addTile.onclick = () => { editorOpen = true; renderCards(topicId, true); };
+        grid.appendChild(addTile);
+      }
     }
 
-    function openCardModal() {
-      document.getElementById('card-question').value = '';
-      document.getElementById('card-answer').value = '';
-      document.getElementById('card-modal').classList.add('open');
-      setTimeout(() => document.getElementById('card-question').focus(), 100);
+    function appendInlineEditor(topicId, doFocus) {
+      const grid = document.getElementById('cards-grid');
+
+      const editor = document.createElement('div');
+      editor.className = 'flashcard-editor';
+      editor.id = 'inline-editor';
+      editor.innerHTML = `
+        <div class="flashcard-editor-top"></div>
+        <div class="flashcard-editor-body">
+          <div class="flashcard-editor-label">Question</div>
+          <textarea id="ie-question" rows="2" placeholder="Type your question…"></textarea>
+          <div class="flashcard-editor-divider"></div>
+          <div class="flashcard-editor-label">Answer</div>
+          <textarea id="ie-answer" rows="2" placeholder="Type the answer…"></textarea>
+        </div>
+        <div class="flashcard-editor-footer">
+          <span class="editor-hint">Tab · next field &nbsp;·&nbsp; ⌘↵ save</span>
+          <div class="editor-actions">
+            <button class="editor-btn editor-btn-cancel" id="ie-cancel">Cancel</button>
+            <button class="editor-btn editor-btn-save" id="ie-save">Save Card</button>
+          </div>
+        </div>
+      `;
+
+      grid.appendChild(editor);
+
+      const qEl = editor.querySelector('#ie-question');
+      const aEl = editor.querySelector('#ie-answer');
+
+      if (doFocus) setTimeout(() => qEl.focus(), 50);
+
+      // Save action
+      function saveInlineCard() {
+        const q = qEl.value.trim();
+        const a = aEl.value.trim();
+        if (!q) { qEl.focus(); qEl.style.borderColor = '#e74c3c'; return; }
+        qEl.style.borderColor = '';
+        const topic = data.find(t => t.id === topicId);
+        topic.cards.push({ question: q, answer: a });
+        saveData();
+        // keep editor open, clear fields, refocus for next card
+        renderCards(topicId, true);
+        // brief flash on the last saved card to confirm
+        const grid2 = document.getElementById('cards-grid');
+        const cards = grid2.querySelectorAll('.flashcard');
+        const last = cards[cards.length - 1];
+        if (last) {
+          last.style.transition = 'box-shadow 0.1s';
+          last.style.boxShadow = '0 0 0 3px var(--calm)';
+          setTimeout(() => { last.style.boxShadow = ''; }, 600);
+        }
+      }
+
+      editor.querySelector('#ie-save').onclick = saveInlineCard;
+
+      editor.querySelector('#ie-cancel').onclick = () => {
+        editorOpen = false;
+        renderCards(topicId);
+      };
+
+      // Cmd/Ctrl+Enter to save from any field
+      [qEl, aEl].forEach(el => {
+        el.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+            e.preventDefault();
+            saveInlineCard();
+          }
+          // Escape to cancel
+          if (e.key === 'Escape') {
+            editorOpen = false;
+            renderCards(topicId);
+          }
+        });
+      });
+
+      editor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    function closeCardModal() {
-      document.getElementById('card-modal').classList.remove('open');
-    }
-
-    function saveCard() {
-      const q = document.getElementById('card-question').value.trim();
-      const a = document.getElementById('card-answer').value.trim();
-      if (!q) return;
-      const topic = data.find(t => t.id === currentTopicId);
-      topic.cards.push({ question: q, answer: a });
-      saveData();
-      closeCardModal();
-      showCardsView(currentTopicId);
-    }
+    // Keep these as no-ops so any leftover references don't break
+    function openCardModal() { editorOpen = true; renderCards(currentTopicId, true); }
+    function closeCardModal() { editorOpen = false; renderCards(currentTopicId); }
+    function saveCard() {}
 
     function deleteAllCards(topicId) {
       if (!confirm('Delete all cards in this topic?')) return;
