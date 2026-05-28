@@ -14,7 +14,6 @@
       --denim:    #5F86A6;
       --midnight: #243A5E;
       --white:    #ffffff;
-      --shadow-md: 0px 6px 24px 0px rgba(36,58,94,0.13);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,15 +26,14 @@
       overflow-x: hidden;
     }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
       background: #243A5E;
-      box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.08);
+      box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
       position: sticky;
       top: 0;
       z-index: 100;
     }
-
     .nav-inner {
       max-width: 1280px;
       margin: auto;
@@ -45,22 +43,15 @@
       padding: 0 24px;
       height: 68px;
     }
-
     .logo {
       font-size: 1.5rem;
       font-weight: 900;
       color: var(--white);
       cursor: pointer;
+      user-select: none;
     }
-
     .logo span { color: var(--calm); }
-
-    .nav-links {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
+    .nav-links { display: flex; gap: 8px; align-items: center; }
     .nav-links a {
       text-decoration: none;
       color: var(--powder);
@@ -70,20 +61,18 @@
       transition: background 0.2s;
       cursor: pointer;
     }
-
     .nav-links a:hover { background: rgba(255,255,255,0.1); }
-
     .btn-nav {
       background: var(--calm) !important;
       color: var(--midnight) !important;
       border-radius: 8px !important;
       padding: 8px 20px !important;
+      font-weight: 800 !important;
       transition: background 0.2s !important;
     }
-
     .btn-nav:hover { background: var(--powder) !important; }
 
-    /* HERO */
+    /* ── HERO ── */
     .hero {
       background: var(--midnight);
       color: var(--white);
@@ -92,7 +81,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .hero::before {
       content: '';
       position: absolute;
@@ -102,7 +90,6 @@
       top: -200px; right: -100px;
       pointer-events: none;
     }
-
     .hero::after {
       content: '';
       position: absolute;
@@ -112,7 +99,6 @@
       bottom: -150px; left: -80px;
       pointer-events: none;
     }
-
     .hero h1 {
       font-size: clamp(2.2rem, 5vw, 3.6rem);
       font-weight: 900;
@@ -120,12 +106,7 @@
       max-width: 720px;
       margin: 0 auto 18px;
     }
-
-    .hero h1 em {
-      font-style: normal;
-      color: var(--calm);
-    }
-
+    .hero h1 em { font-style: normal; color: var(--calm); }
     .hero p {
       font-size: 1.1rem;
       color: var(--powder);
@@ -133,14 +114,6 @@
       margin: 0 auto 36px;
       line-height: 1.7;
     }
-
-    .hero-cta {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
     .btn-primary {
       background: var(--calm);
       color: var(--midnight);
@@ -155,20 +128,11 @@
       text-decoration: none;
       display: inline-block;
     }
-
     .btn-primary:hover { background: var(--powder); transform: translateY(-2px); }
 
-    /* HOW IT WORKS */
-    .how {
-      background: var(--white);
-      padding: 80px 24px;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 52px;
-    }
-
+    /* ── HOW IT WORKS ── */
+    .how { background: var(--white); padding: 80px 24px; }
+    .section-header { text-align: center; margin-bottom: 52px; }
     .section-eyebrow {
       font-size: 0.78rem;
       font-weight: 800;
@@ -177,13 +141,11 @@
       color: var(--denim);
       margin-bottom: 10px;
     }
-
     .section-header h2 {
       font-size: clamp(1.7rem, 3.5vw, 2.2rem);
       font-weight: 900;
       color: var(--midnight);
     }
-
     .steps {
       display: flex;
       max-width: 860px;
@@ -191,14 +153,7 @@
       flex-wrap: wrap;
       justify-content: center;
     }
-
-    .step {
-      flex: 1;
-      min-width: 200px;
-      text-align: center;
-      padding: 0 20px;
-    }
-
+    .step { flex: 1; min-width: 200px; text-align: center; padding: 0 20px; }
     .step-num {
       width: 56px; height: 56px;
       border-radius: 50%;
@@ -211,105 +166,282 @@
       justify-content: center;
       margin: 0 auto 16px;
     }
+    .step h3 { font-size: 1rem; font-weight: 800; color: var(--midnight); margin-bottom: 6px; }
+    .step p { font-size: 0.875rem; color: var(--denim); line-height: 1.6; }
 
-    .step h3 {
+    /* ── APP SECTION ── */
+    #app-section { display: none; min-height: 80vh; }
+
+    /* App top bar */
+    .app-bar {
+      background: var(--white);
+      border-bottom: 2px solid var(--powder);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 100%;
+    }
+    .app-bar-title {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--midnight);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .app-bar-title .breadcrumb {
+      color: var(--denim);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .app-bar-title .breadcrumb:hover { text-decoration: underline; }
+    .app-bar-title .sep { color: var(--calm); font-weight: 400; }
+    .app-bar-actions { display: flex; gap: 10px; }
+
+    /* Shared button styles in app */
+    .app-btn {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .app-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .app-btn-primary { background: var(--midnight); color: var(--white); }
+    .app-btn-danger  { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6c6; }
+
+    /* ── TOPICS GRID ── */
+    #topics-view { padding: 32px 24px; max-width: 1280px; margin: auto; }
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 8px;
+    }
+
+    .topic-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 24px 20px 20px;
+      box-shadow: 0 2px 8px rgba(36,58,94,0.10);
+      cursor: pointer;
+      position: relative;
+      border: 2px solid transparent;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .topic-card:hover {
+      border-color: var(--calm);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(36,58,94,0.15);
+    }
+    .topic-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--midnight);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--calm);
+      margin-bottom: 4px;
+    }
+    .topic-name {
       font-size: 1rem;
       font-weight: 800;
       color: var(--midnight);
-      margin-bottom: 6px;
     }
-
-    .step p {
-      font-size: 0.875rem;
+    .topic-count {
+      font-size: 0.8rem;
       color: var(--denim);
-      line-height: 1.6;
+      font-weight: 600;
     }
-
-    /* ── APP SECTION (from original) ── */
-    #app-section {
-      display: none;
-      background: #CFE3F1;
-    }
-
-    #header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      min-height: 70px;
-      padding: 0 20px;
-      background: #fff;
-    }
-
-    #header button {
-      font-family: inherit;
-      border: 1px solid red;
-      padding: 8px;
-      outline: none;
+    .topic-delete {
+      position: absolute;
+      top: 10px; right: 12px;
+      background: none;
+      border: none;
+      color: #ccc;
+      font-size: 1rem;
       cursor: pointer;
-      border-radius: 5px;
-      background: whitesmoke;
+      transition: color 0.2s;
+      padding: 4px;
     }
+    .topic-delete:hover { color: #e74c3c; }
 
-    #header button:hover { background-color: rgba(0,0,0,0.1); }
-
-    #create_card {
-      display: none;
-      width: 370px;
-      margin: auto;
-      padding: 20px;
-      margin-top: 10px;
-      background: whitesmoke;
-      box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.9);
-    }
-
-    #create_card h2 { color: black; text-align: center; }
-
-    #create_card textarea {
-      width: 100%;
-      border-radius: 5px;
-      font-family: inherit;
-      border: 1px solid lightgray;
-      resize: none;
-    }
-
-    #create_card button { width: fit-content; }
-
-    #flashcards {
+    /* Add topic card (dashed) */
+    .topic-card-add {
+      background: transparent;
+      border: 2px dashed var(--calm);
+      border-radius: 14px;
+      padding: 24px 20px;
+      cursor: pointer;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--denim);
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: background 0.2s, color 0.2s;
+      min-height: 130px;
+    }
+    .topic-card-add:hover { background: rgba(143,182,216,0.15); color: var(--midnight); }
+    .topic-card-add i { font-size: 1.5rem; color: var(--calm); }
+
+    /* ── CARDS VIEW ── */
+    #cards-view { display: none; padding: 32px 24px; max-width: 1280px; margin: auto; }
+
+    .cards-grid {
+      display: flex;
       flex-wrap: wrap;
-      width: 100%;
-      margin: auto;
-      margin-top: 10px;
-      padding: 0px 10px;
-      padding-bottom: 40px;
+      gap: 16px;
+      margin-top: 8px;
     }
 
     .flashcard {
-      width: 370px;
-      height: 200px;
-      word-wrap: break-word;
-      margin: 10px;
-      background: #fff;
+      width: 340px;
+      min-height: 180px;
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(36,58,94,0.10);
       cursor: pointer;
-      box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.9);
       position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 2px solid transparent;
     }
+    .flashcard:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(36,58,94,0.15); }
 
-    .flashcard h2 { font-size: 1rem; }
-
-    .fa-minus {
-      top: 3%;
-      right: 2%;
+    .flashcard-top {
+      background: var(--midnight);
+      height: 8px;
+    }
+    .flashcard-body { padding: 20px 18px 16px; }
+    .flashcard-q {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--midnight);
+      border-top: 2px solid var(--calm);
+      padding-top: 10px;
+      margin-top: 4px;
+    }
+    .flashcard-a {
+      font-size: 0.9rem;
+      color: var(--denim);
+      margin-top: 10px;
+      font-weight: 600;
+      display: none;
+    }
+    .flashcard-hint {
+      font-size: 0.72rem;
+      color: #aaa;
+      margin-top: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .flashcard .fa-minus {
+      top: 14px; right: 12px;
       position: absolute;
-      color: #1a1a1a;
-      transition: 0.3s ease-out;
+      color: #ccc;
+      font-size: 0.9rem;
+      transition: 0.2s;
+      cursor: pointer;
     }
+    .flashcard .fa-minus:hover { color: #e74c3c; }
 
-    .fa-minus:hover { color: red; }
+    /* Add card tile */
+    .flashcard-add {
+      width: 340px;
+      min-height: 180px;
+      background: transparent;
+      border: 2px dashed var(--calm);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--denim);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .flashcard-add:hover { background: rgba(143,182,216,0.15); }
+    .flashcard-add i { font-size: 1.5rem; color: var(--calm); }
 
-    /* FOOTER */
+    /* ── MODALS ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(36,58,94,0.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 32px 28px;
+      width: 380px;
+      max-width: 95vw;
+      box-shadow: 0 12px 40px rgba(36,58,94,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal h3 { font-size: 1.2rem; font-weight: 900; color: var(--midnight); }
+    .modal input, .modal textarea {
+      width: 100%;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      padding: 10px 12px;
+      border: 1.5px solid var(--powder);
+      border-radius: 8px;
+      outline: none;
+      color: var(--midnight);
+      resize: none;
+      transition: border-color 0.2s;
+    }
+    .modal input:focus, .modal textarea:focus { border-color: var(--calm); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .modal-cancel {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1.5px solid var(--powder);
+      background: transparent;
+      color: var(--denim);
+      cursor: pointer;
+    }
+    .modal-save {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: none;
+      background: var(--midnight);
+      color: var(--white);
+      cursor: pointer;
+    }
+    .modal-save:hover { background: var(--denim); }
+
+    /* ── FOOTER ── */
     footer {
       background: var(--midnight);
       padding: 24px;
@@ -318,17 +450,13 @@
       color: var(--calm);
     }
 
-    /* RESPONSIVE */
+    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .nav-links a:not(.btn-nav) { display: none; }
+      .flashcard, .flashcard-add { width: 100%; }
     }
-
     @media (max-width: 480px) {
       .hero { padding: 60px 20px 56px; }
-      .btn-primary { width: 100%; max-width: 300px; text-align: center; }
-      #create_card { width: 95%; }
-      .flashcard { width: 100%; }
-      #header { padding: 20px; gap: 10px; flex-direction: column; align-items: center; }
     }
   </style>
 </head>
@@ -340,7 +468,6 @@
       <div class="logo" onclick="showLanding()">Deck<span>Head</span></div>
       <div class="nav-links">
         <a href="#how" id="how-link">How it works</a>
-        <a href="#collections" id="collections-link">My Collections</a>
         <a onclick="showApp()" class="btn-nav" id="start-btn">Start Studying</a>
       </div>
     </div>
@@ -348,11 +475,10 @@
 
   <!-- LANDING -->
   <div id="landing-section">
-
     <section class="hero">
       <h1>Study smarter with<br><em>digital flashcards</em></h1>
       <p>Create, flip, and master any topic. Build your deck in seconds and study anywhere — no account needed.</p>
-      <div class="hero-cta">
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
         <a onclick="showApp()" class="btn-primary">Start Studying →</a>
       </div>
     </section>
@@ -365,13 +491,13 @@
       <div class="steps">
         <div class="step">
           <div class="step-num">1</div>
-          <h3>Create a card</h3>
-          <p>Click "Add Card", type your question and answer, and hit save.</p>
+          <h3>Add a topic</h3>
+          <p>Create a topic folder like "Biology" or "History" to organize your cards.</p>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <h3>Build your deck</h3>
-          <p>Add as many cards as you need.</p>
+          <h3>Add cards</h3>
+          <p>Open a topic and add as many flashcards as you need.</p>
         </div>
         <div class="step">
           <div class="step-num">3</div>
@@ -380,46 +506,82 @@
         </div>
       </div>
     </section>
-
   </div>
 
-  <!-- APP (hidden until Start Studying is clicked) -->
+  <!-- APP SECTION -->
   <div id="app-section">
 
-    <header>
-      <div id="header" class="container">
-        <h2>DeckHead</h2>
-        <div style="display:flex; gap:8px;">
-          <button id="show_card_box">Add Card</button>
-          <button id="delete_cards">Delete All</button>
-        </div>
-      </div>
-    </header>
-
-    <div id="create_card" class="container">
-      <h2>Create Flashcard</h2>
-      <br>
-      <textarea id="question" rows="2" placeholder="Question"></textarea>
-      <br><br>
-      <textarea id="answer" rows="2" placeholder="Answer"></textarea>
-      <br><br>
-      <div style="display:flex; gap:8px;">
-        <button id="save_card">Save</button>
-        <button id="close_card_box">Close</button>
+    <!-- App bar -->
+    <div class="app-bar">
+      <div class="app-bar-title" id="app-bar-title">My Collections</div>
+      <div class="app-bar-actions" id="app-bar-actions">
+        <button class="app-btn app-btn-primary" onclick="openTopicModal()">
+          <i class="fas fa-plus"></i> Add Topic
+        </button>
       </div>
     </div>
 
-    <div id="flashcards"></div>
+    <!-- Topics grid -->
+    <div id="topics-view">
+      <div class="topics-grid" id="topics-grid"></div>
+    </div>
+
+    <!-- Cards view (shown when topic is opened) -->
+    <div id="cards-view">
+      <div class="cards-grid" id="cards-grid"></div>
+    </div>
 
   </div>
 
+  <!-- FOOTER -->
+  <footer>
+    <p>DeckHead · Your cards are stored privately in your browser.</p>
+  </footer>
+
+  <!-- MODAL: Add Topic -->
+  <div class="modal-overlay" id="topic-modal">
+    <div class="modal">
+      <h3>New Topic</h3>
+      <input type="text" id="topic-name-input" placeholder="e.g. Biology, Math, History..." maxlength="40" />
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeTopicModal()">Cancel</button>
+        <button class="modal-save" onclick="saveTopic()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Card -->
+  <div class="modal-overlay" id="card-modal">
+    <div class="modal">
+      <h3>New Flashcard</h3>
+      <textarea id="card-question" rows="2" placeholder="Question"></textarea>
+      <textarea id="card-answer" rows="2" placeholder="Answer"></textarea>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeCardModal()">Cancel</button>
+        <button class="modal-save" onclick="saveCard()">Save Card</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // ── Data ──
+    let data = localStorage.getItem('deckhead') ? JSON.parse(localStorage.getItem('deckhead')) : [];
+    // data = [ { id, name, cards: [ { question, answer } ] } ]
+
+    let currentTopicId = null;
+
+    function saveData() {
+      localStorage.setItem('deckhead', JSON.stringify(data));
+    }
+
+    // ── Nav ──
     function showApp() {
       document.getElementById('landing-section').style.display = 'none';
       document.getElementById('app-section').style.display = 'block';
       document.getElementById('how-link').style.display = 'none';
       document.getElementById('start-btn').textContent = '← Back';
       document.getElementById('start-btn').onclick = showLanding;
+      showTopicsView();
       window.scrollTo(0, 0);
     }
 
@@ -432,73 +594,189 @@
       window.scrollTo(0, 0);
     }
 
-    // ── Original flashcard logic ──
-    var contentArray = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [];
-
-    document.getElementById("save_card").addEventListener("click", () => { addFlashcard(); });
-
-    document.getElementById("delete_cards").addEventListener("click", () => {
-      localStorage.clear();
-      document.getElementById('flashcards').innerHTML = '';
-      contentArray = [];
-    });
-
-    document.getElementById("show_card_box").addEventListener("click", () => {
-      document.getElementById("create_card").style.display = "block";
-    });
-
-    document.getElementById("close_card_box").addEventListener("click", () => {
-      document.getElementById("create_card").style.display = "none";
-    });
-
-    function flashcardMaker(text, delThisIndex) {
-      const flashcard = document.createElement("div");
-      const question = document.createElement('h2');
-      const answer = document.createElement('h2');
-      const del = document.createElement('i');
-
-      flashcard.className = 'flashcard';
-      question.setAttribute("style", "border-top:1px solid red; padding: 15px; margin-top:30px");
-      question.textContent = text.my_question;
-      answer.setAttribute("style", "text-align:center; display:none; color:red");
-      answer.textContent = text.my_answer;
-      del.className = "fas fa-minus";
-
-      del.addEventListener("click", (e) => {
-        e.stopPropagation();
-        contentArray.splice(delThisIndex, 1);
-        localStorage.setItem('items', JSON.stringify(contentArray));
-        flashcard.remove();
-        // re-index
-        contentArray = JSON.parse(localStorage.getItem('items')) || [];
-        document.getElementById('flashcards').innerHTML = '';
-        contentArray.forEach(flashcardMaker);
-      });
-
-      flashcard.appendChild(question);
-      flashcard.appendChild(answer);
-      flashcard.appendChild(del);
-
-      flashcard.addEventListener("click", () => {
-        answer.style.display = answer.style.display === "none" ? "block" : "none";
-      });
-
-      document.querySelector("#flashcards").appendChild(flashcard);
+    // ── Views ──
+    function showTopicsView() {
+      currentTopicId = null;
+      document.getElementById('topics-view').style.display = 'block';
+      document.getElementById('cards-view').style.display = 'none';
+      document.getElementById('app-bar-title').innerHTML = 'My Collections';
+      document.getElementById('app-bar-actions').innerHTML = `
+        <button class="app-btn app-btn-primary" onclick="openTopicModal()">
+          <i class="fas fa-plus"></i> Add Topic
+        </button>`;
+      renderTopics();
     }
 
-    contentArray.forEach(flashcardMaker);
-
-    function addFlashcard() {
-      const question = document.querySelector("#question");
-      const answer = document.querySelector("#answer");
-      if (!question.value.trim()) return;
-      let flashcard_info = { my_question: question.value, my_answer: answer.value };
-      contentArray.push(flashcard_info);
-      localStorage.setItem('items', JSON.stringify(contentArray));
-      flashcardMaker(contentArray[contentArray.length - 1], contentArray.length - 1);
-      question.value = "";
-      answer.value = "";
+    function showCardsView(topicId) {
+      currentTopicId = topicId;
+      const topic = data.find(t => t.id === topicId);
+      document.getElementById('topics-view').style.display = 'none';
+      document.getElementById('cards-view').style.display = 'block';
+      document.getElementById('app-bar-title').innerHTML = `
+        <span class="breadcrumb" onclick="showTopicsView()">My Collections</span>
+        <span class="sep"> / </span>
+        ${topic.name}`;
+      document.getElementById('app-bar-actions').innerHTML = `
+        <button class="app-btn app-btn-danger" onclick="deleteAllCards('${topicId}')">
+          <i class="fas fa-trash"></i> Delete All Cards
+        </button>
+        <button class="app-btn app-btn-primary" onclick="openCardModal()">
+          <i class="fas fa-plus"></i> Add Card
+        </button>`;
+      renderCards(topicId);
     }
+
+    // ── Topics ──
+    function renderTopics() {
+      const grid = document.getElementById('topics-grid');
+      grid.innerHTML = '';
+
+      data.forEach(topic => {
+        const card = document.createElement('div');
+        card.className = 'topic-card';
+        card.innerHTML = `
+          <button class="topic-delete" onclick="deleteTopic(event,'${topic.id}')"><i class="fas fa-times"></i></button>
+          <div class="topic-icon"><i class="fas fa-layer-group"></i></div>
+          <div class="topic-name">${topic.name}</div>
+          <div class="topic-count">${topic.cards.length} card${topic.cards.length !== 1 ? 's' : ''}</div>
+        `;
+        card.addEventListener('click', () => showCardsView(topic.id));
+        grid.appendChild(card);
+      });
+
+      // Add topic tile
+      const addTile = document.createElement('div');
+      addTile.className = 'topic-card-add';
+      addTile.innerHTML = `<i class="fas fa-plus"></i><span>New Topic</span>`;
+      addTile.onclick = openTopicModal;
+      grid.appendChild(addTile);
+    }
+
+    function openTopicModal() {
+      document.getElementById('topic-name-input').value = '';
+      document.getElementById('topic-modal').classList.add('open');
+      setTimeout(() => document.getElementById('topic-name-input').focus(), 100);
+    }
+
+    function closeTopicModal() {
+      document.getElementById('topic-modal').classList.remove('open');
+    }
+
+    function saveTopic() {
+      const name = document.getElementById('topic-name-input').value.trim();
+      if (!name) return;
+      data.push({ id: Date.now().toString(), name, cards: [] });
+      saveData();
+      closeTopicModal();
+      renderTopics();
+    }
+
+    function deleteTopic(e, topicId) {
+      e.stopPropagation();
+      if (!confirm('Delete this topic and all its cards?')) return;
+      data = data.filter(t => t.id !== topicId);
+      saveData();
+      renderTopics();
+    }
+
+    // ── Cards ──
+    function renderCards(topicId) {
+      const topic = data.find(t => t.id === topicId);
+      const grid = document.getElementById('cards-grid');
+      grid.innerHTML = '';
+
+      topic.cards.forEach((card, index) => {
+        const el = document.createElement('div');
+        el.className = 'flashcard';
+        el.innerHTML = `
+          <div class="flashcard-top"></div>
+          <div class="flashcard-body">
+            <div class="flashcard-q">${card.question}</div>
+            <div class="flashcard-a">${card.answer}</div>
+            <div class="flashcard-hint">TAP TO REVEAL</div>
+          </div>
+          <i class="fas fa-minus"></i>
+        `;
+
+        // flip
+        el.addEventListener('click', () => {
+          const a = el.querySelector('.flashcard-a');
+          const hint = el.querySelector('.flashcard-hint');
+          if (a.style.display === 'block') {
+            a.style.display = 'none';
+            hint.textContent = 'TAP TO REVEAL';
+          } else {
+            a.style.display = 'block';
+            hint.textContent = 'TAP TO HIDE';
+          }
+        });
+
+        // delete
+        el.querySelector('.fa-minus').addEventListener('click', (e) => {
+          e.stopPropagation();
+          topic.cards.splice(index, 1);
+          saveData();
+          renderCards(topicId);
+          // update count in breadcrumb actions
+          showCardsView(topicId);
+        });
+
+        grid.appendChild(el);
+      });
+
+      // Add card tile
+      const addTile = document.createElement('div');
+      addTile.className = 'flashcard-add';
+      addTile.innerHTML = `<i class="fas fa-plus"></i><span>New Card</span>`;
+      addTile.onclick = openCardModal;
+      grid.appendChild(addTile);
+    }
+
+    function openCardModal() {
+      document.getElementById('card-question').value = '';
+      document.getElementById('card-answer').value = '';
+      document.getElementById('card-modal').classList.add('open');
+      setTimeout(() => document.getElementById('card-question').focus(), 100);
+    }
+
+    function closeCardModal() {
+      document.getElementById('card-modal').classList.remove('open');
+    }
+
+    function saveCard() {
+      const q = document.getElementById('card-question').value.trim();
+      const a = document.getElementById('card-answer').value.trim();
+      if (!q) return;
+      const topic = data.find(t => t.id === currentTopicId);
+      topic.cards.push({ question: q, answer: a });
+      saveData();
+      closeCardModal();
+      showCardsView(currentTopicId);
+    }
+
+    function deleteAllCards(topicId) {
+      if (!confirm('Delete all cards in this topic?')) return;
+      const topic = data.find(t => t.id === topicId);
+      topic.cards = [];
+      saveData();
+      renderCards(topicId);
+    }
+
+    // Close modals on overlay click
+    document.getElementById('topic-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeTopicModal();
+    });
+    document.getElementById('card-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeCardModal();
+    });
+
+    // Enter key to save
+    document.getElementById('topic-name-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') saveTopic();
+    });
+
+    // Init
+    renderTopics();
   </script>
 
 </body>
