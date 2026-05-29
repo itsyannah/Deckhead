@@ -394,18 +394,12 @@
     function showApp() {
       document.getElementById('landing-section').style.display = 'none';
       document.getElementById('app-section').style.display = 'block';
-      document.getElementById('how-link').style.display = 'none';
-      document.getElementById('start-btn').textContent = '← Back';
-      document.getElementById('start-btn').onclick = showLanding;
       showTopicsView();
       window.scrollTo(0, 0);
     }
     function showLanding() {
       document.getElementById('landing-section').style.display = 'block';
       document.getElementById('app-section').style.display = 'none';
-      document.getElementById('how-link').style.display = '';
-      document.getElementById('start-btn').textContent = 'Start Studying';
-      document.getElementById('start-btn').onclick = showApp;
       window.scrollTo(0, 0);
     }
 
