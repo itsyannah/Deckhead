@@ -864,6 +864,96 @@
 
   </div>
 
+  <!-- STUDY MODE OVERLAY -->
+  <div id="study-view">
+    <div class="study-header">
+      <div class="study-topic-name" id="study-topic-name"></div>
+      <button class="study-close" onclick="closeStudy()"><i class="fas fa-times"></i> Exit</button>
+    </div>
+    <div class="study-progress-wrap">
+      <div class="study-progress-info">
+        <span id="study-progress-label">Card 1 of 10</span>
+        <span id="study-progress-pct">0%</span>
+      </div>
+      <div class="study-progress-bar"><div class="study-progress-fill" id="study-progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Card -->
+    <div class="study-card-wrap" id="study-card-wrap">
+      <div class="study-card" id="study-card" onclick="flipStudyCard()">
+        <div class="study-card-face study-card-front">
+          <div class="study-card-label">Question</div>
+          <div class="study-card-text" id="study-q-text"></div>
+          <div class="study-card-hint">Click to flip</div>
+        </div>
+        <div class="study-card-face study-card-back">
+          <div class="study-card-label">Answer</div>
+          <div class="study-card-text" id="study-a-text"></div>
+          <div class="study-card-hint">Click to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="study-controls">
+      <button class="study-nav-btn" id="study-prev" onclick="studyNav(-1)" title="Previous (←)">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <button class="study-flip-btn" onclick="flipStudyCard()">
+        <i class="fas fa-sync-alt"></i> Flip Card
+      </button>
+      <button class="study-nav-btn" id="study-next" onclick="studyNav(1)" title="Next (→)">
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- Know / Don't Know (shown after flip) -->
+    <div class="study-know-btns" id="study-know-btns">
+      <button class="study-know-btn study-btn-noknow" onclick="markCard(false)">
+        <i class="fas fa-times"></i> Still Learning
+      </button>
+      <button class="study-know-btn study-btn-know" onclick="markCard(true)">
+        <i class="fas fa-check"></i> Got It!
+      </button>
+    </div>
+
+    <div class="study-kb-hint" id="study-kb-hint">
+      ← → navigate &nbsp;·&nbsp; Space flip &nbsp;·&nbsp; 1 still learning &nbsp;·&nbsp; 2 got it
+    </div>
+
+    <!-- Results screen -->
+    <div class="study-results" id="study-results">
+      <div class="results-emoji" id="results-emoji">🎉</div>
+      <div class="results-title" id="results-title">Round Complete!</div>
+      <div class="results-subtitle" id="results-subtitle">Here's how you did</div>
+      <div class="results-score-row">
+        <div class="results-score-box">
+          <div class="results-score-num green" id="results-got"></div>
+          <div class="results-score-label">Got It</div>
+        </div>
+        <div class="results-score-box">
+          <div class="results-score-num red" id="results-learning"></div>
+          <div class="results-score-label">Still Learning</div>
+        </div>
+        <div class="results-score-box">
+          <div class="results-score-num blue" id="results-total"></div>
+          <div class="results-score-label">Total</div>
+        </div>
+      </div>
+      <div class="results-actions">
+        <button class="results-btn results-btn-retry" onclick="retryStudy(false)">
+          <i class="fas fa-redo"></i> Study All Again
+        </button>
+        <button class="results-btn results-btn-wrong" id="retry-wrong-btn" onclick="retryStudy(true)">
+          <i class="fas fa-times"></i> Retry Wrong Cards
+        </button>
+        <button class="results-btn results-btn-exit" onclick="closeStudy()">
+          <i class="fas fa-door-open"></i> Exit
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer>
     <p>DeckHead · Your cards are stored privately in your browser.</p>
@@ -952,6 +1042,9 @@
       document.getElementById('app-bar-actions').innerHTML = `
         <button class="app-btn app-btn-danger" onclick="deleteAllCards('${topicId}')">
           <i class="fas fa-trash"></i> Delete All Cards
+        </button>
+        <button class="app-btn app-btn-play" onclick="startStudy('${topicId}')" id="study-mode-btn">
+          <i class="fas fa-play"></i> Study
         </button>
         <button class="app-btn app-btn-primary" onclick="editorOpen=true;renderCards('${topicId}',true)">
           <i class="fas fa-plus"></i> Add Card
@@ -1173,7 +1266,155 @@
       if (e.key === 'Enter') saveTopic();
     });
 
-    // Init
+    // ── Study Mode ──
+    let studyDeck       = [];
+    let studyIndex      = 0;
+    let studyFlipped    = false;
+    let studyKnown      = [];
+    let studyUnknown    = [];
+    let studyTopicId    = null;
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function startStudy(topicId, subset) {
+      const topic = data.find(t => t.id === topicId);
+      if (!topic || topic.cards.length === 0) {
+        alert('Add some cards first before studying!');
+        return;
+      }
+      studyTopicId = topicId;
+      studyDeck    = shuffle(subset || topic.cards);
+      studyIndex   = 0;
+      studyKnown   = [];
+      studyUnknown = [];
+
+      document.getElementById('study-topic-name').textContent = topic.name;
+      document.getElementById('study-results').classList.remove('visible');
+      document.getElementById('study-card-wrap').style.display = '';
+      document.getElementById('study-controls').style.display = '';
+      document.getElementById('study-know-btns').classList.remove('visible');
+      document.getElementById('study-kb-hint').style.display = '';
+      document.getElementById('study-progress-wrap').style.display = '';
+
+      document.getElementById('study-view').classList.add('active');
+      document.addEventListener('keydown', studyKeyHandler);
+
+      renderStudyCard();
+    }
+
+    function renderStudyCard() {
+      const card = studyDeck[studyIndex];
+      studyFlipped = false;
+
+      document.getElementById('study-card').classList.remove('flipped');
+      document.getElementById('study-q-text').textContent = card.question;
+      document.getElementById('study-a-text').textContent = card.answer;
+      document.getElementById('study-know-btns').classList.remove('visible');
+
+      // Progress
+      const done = studyIndex;
+      const total = studyDeck.length;
+      const pct = Math.round((done / total) * 100);
+      document.getElementById('study-progress-label').textContent = `Card ${studyIndex + 1} of ${total}`;
+      document.getElementById('study-progress-pct').textContent = pct + '%';
+      document.getElementById('study-progress-fill').style.width = pct + '%';
+
+      // Prev/Next buttons
+      document.getElementById('study-prev').disabled = studyIndex === 0;
+      document.getElementById('study-next').disabled = studyIndex === total - 1;
+    }
+
+    function flipStudyCard() {
+      studyFlipped = !studyFlipped;
+      document.getElementById('study-card').classList.toggle('flipped', studyFlipped);
+      if (studyFlipped) {
+        document.getElementById('study-know-btns').classList.add('visible');
+      } else {
+        document.getElementById('study-know-btns').classList.remove('visible');
+      }
+    }
+
+    function studyNav(dir) {
+      const newIndex = studyIndex + dir;
+      if (newIndex < 0 || newIndex >= studyDeck.length) return;
+      studyIndex = newIndex;
+      renderStudyCard();
+    }
+
+    function markCard(knew) {
+      const card = studyDeck[studyIndex];
+      if (knew) studyKnown.push(card);
+      else studyUnknown.push(card);
+
+      studyIndex++;
+      if (studyIndex >= studyDeck.length) {
+        showStudyResults();
+      } else {
+        renderStudyCard();
+      }
+    }
+
+    function showStudyResults() {
+      document.getElementById('study-card-wrap').style.display = 'none';
+      document.getElementById('study-controls').style.display = 'none';
+      document.getElementById('study-know-btns').classList.remove('visible');
+      document.getElementById('study-kb-hint').style.display = 'none';
+      document.getElementById('study-progress-fill').style.width = '100%';
+      document.getElementById('study-progress-pct').textContent = '100%';
+      document.getElementById('study-progress-label').textContent = `Done! ${studyDeck.length} of ${studyDeck.length}`;
+
+      const got = studyKnown.length;
+      const total = studyDeck.length;
+      const pct = Math.round((got / total) * 100);
+
+      document.getElementById('results-got').textContent = got;
+      document.getElementById('results-learning').textContent = studyUnknown.length;
+      document.getElementById('results-total').textContent = total;
+
+      let emoji = '😅', title = 'Keep Going!', sub = "You'll get there with more practice.";
+      if (pct === 100) { emoji = '🏆'; title = 'Perfect Score!'; sub = 'You know this deck cold!'; }
+      else if (pct >= 80) { emoji = '🎉'; title = 'Great Work!'; sub = `${pct}% mastered — almost there!`; }
+      else if (pct >= 50) { emoji = '💪'; title = 'Halfway There!'; sub = `${pct}% mastered — keep it up!`; }
+
+      document.getElementById('results-emoji').textContent = emoji;
+      document.getElementById('results-title').textContent = title;
+      document.getElementById('results-subtitle').textContent = sub;
+
+      const retryWrong = document.getElementById('retry-wrong-btn');
+      retryWrong.style.display = studyUnknown.length > 0 ? '' : 'none';
+
+      document.getElementById('study-results').classList.add('visible');
+    }
+
+    function retryStudy(wrongOnly) {
+      const subset = wrongOnly ? studyUnknown : null;
+      startStudy(studyTopicId, subset);
+    }
+
+    function closeStudy() {
+      document.getElementById('study-view').classList.remove('active');
+      document.removeEventListener('keydown', studyKeyHandler);
+    }
+
+    function studyKeyHandler(e) {
+      if (!document.getElementById('study-view').classList.contains('active')) return;
+      if (document.getElementById('study-results').classList.contains('visible')) return;
+      if (e.key === 'ArrowRight') studyNav(1);
+      else if (e.key === 'ArrowLeft') studyNav(-1);
+      else if (e.key === ' ') { e.preventDefault(); flipStudyCard(); }
+      else if (e.key === '1') { if (studyFlipped) markCard(false); }
+      else if (e.key === '2') { if (studyFlipped) markCard(true); }
+      else if (e.key === 'Escape') closeStudy();
+    }
+
+    // ── Init ──
     renderTopics();
   </script>
 
