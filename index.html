@@ -470,7 +470,7 @@
       position: fixed;
       inset: 0;
       background: var(--midnight);
-      z-index: 300;
+      z-index: 9999;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
@@ -542,7 +542,7 @@
     }
     .study-card {
       width: 100%;
-      min-height: 320px;
+      height: 320px;
       position: relative;
       transform-style: preserve-3d;
       transition: transform 0.55s cubic-bezier(.4,0,.2,1);
@@ -562,7 +562,6 @@
       align-items: center;
       justify-content: center;
       padding: 40px 36px;
-      min-height: 320px;
     }
     .study-card-front { background: var(--white); }
     .study-card-back  { background: var(--calm); transform: rotateY(180deg); }
@@ -956,7 +955,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <p>DeckHead.La is ban!</p>
+    <p>DeckHead · Your cards are stored privately in your browser.</p>
   </footer>
 
   <!-- MODAL: Add Topic -->
@@ -1043,7 +1042,7 @@
         <button class="app-btn app-btn-danger" onclick="deleteAllCards('${topicId}')">
           <i class="fas fa-trash"></i> Delete All Cards
         </button>
-        <button class="app-btn app-btn-play" onclick="startStudy('${topicId}')" id="study-mode-btn">
+        <button class="app-btn app-btn-play" onclick="startStudy(currentTopicId)" id="study-mode-btn">
           <i class="fas fa-play"></i> Study
         </button>
         <button class="app-btn app-btn-primary" onclick="editorOpen=true;renderCards('${topicId}',true)">
